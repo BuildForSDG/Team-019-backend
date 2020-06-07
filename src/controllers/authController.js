@@ -1,9 +1,9 @@
 const crypto = require('crypto');
+const fetch = require('node-fetch');
 const ErrorResponse = require('../helpers/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const sendEmail = require('../helpers/sendEmail');
 const User = require('../models/User');
-
 // Get token from model, create cookie and send response
 
 
@@ -216,4 +216,29 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   await user.save();
 
   sendTokenResponse(user, 200, res);
+});
+
+exports.verifyBvn = asyncHandler(async (req, res, next) => {
+  try {
+    await fetch(`https://api.paystack.co/bank/resolve_bvn/${req.body.bvn}`, {
+      method: 'get',
+      headers: {
+        authorization: process.env.PAYSTACK_API_KEY
+      }
+    }).then((res) => res.json()).then((response) => {
+      // TODO: Send BVNToken to response.data.mobile
+      if (response.status == 'false') {
+        return next(new ErrorResponse('Enter a valid BVN Number', 400));
+      }
+      req.user.BvnToken = 1234;
+      req.user.BvnTokenExpire = Date.now() + 10 * 60 * 1000;
+      res.status(200).json({
+        success: true,
+        data: response.data
+      });
+    });
+    console.log(response);
+  } catch (e) {
+    console.log(e.message);
+  }
 });
