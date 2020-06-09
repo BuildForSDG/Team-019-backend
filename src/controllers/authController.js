@@ -1,9 +1,11 @@
+/* eslint-disable no-underscore-dangle */
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 const ErrorResponse = require('../helpers/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const sendEmail = require('../helpers/sendEmail');
 const User = require('../models/User');
+const { generateCustomerId } = require('../helpers/generateCustomer');
 // Get token from model, create cookie and send response
 
 
@@ -47,7 +49,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     password,
     role
   });
-
+  generateCustomerId(user.email, user);
   sendTokenResponse(user, 200, res);
 });
 
@@ -218,27 +220,49 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-exports.verifyBvn = asyncHandler(async (req, res, next) => {
+exports.sendBvnVerification = asyncHandler(async (req, res, next) => {
   try {
     await fetch(`https://api.paystack.co/bank/resolve_bvn/${req.body.bvn}`, {
       method: 'get',
       headers: {
         authorization: process.env.PAYSTACK_API_KEY
       }
-    }).then((res) => res.json()).then((response) => {
+    }).then((res) => res.json()).then(async (response) => {
       // TODO: Send BVNToken to response.data.mobile
       if (response.status == 'false') {
         return next(new ErrorResponse('Enter a valid BVN Number', 400));
       }
-      req.user.BvnToken = 1234;
-      req.user.BvnTokenExpire = Date.now() + 10 * 60 * 1000;
+      const user = await User.findById(req.user._id);
+      user.BvnToken = 1234;
+      user.BvnTokenExpire = Date.now() + 10 * 60 * 1000;
+      user.save();
       res.status(200).json({
         success: true,
         data: response.data
       });
     });
-    console.log(response);
   } catch (e) {
     console.log(e.message);
   }
+});
+exports.verifyBvn = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if(Date.now() > user.BvnTokenExpire){
+    return res.status(400).json({
+      status: 'failed',
+      message: 'Bvn token expired'
+    })
+  }
+  if (req.body.bvnCode == user.BvnToken) {
+    user.isverifed = true;
+    user.save();
+    return res.status(200).json({
+      status: 'success',
+      message: 'User is verified'
+    });
+  }
+  return res.status(401).json({
+    status: 'failed',
+    message:'invalid Token'
+  });
 });
