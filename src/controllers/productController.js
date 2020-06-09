@@ -1,3 +1,4 @@
+const queryString = require('querystring');
 const ErrorResponse = require('../helpers/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const Product = require('../models/Product');
@@ -104,10 +105,10 @@ exports.rateProduct = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`Product not found with slug of ${req.params.slug}`, 404));
   }
 
-  //Ensure user cannot rate his own product
+  // Ensure user cannot rate his own product
 
-  if(product.user.toString() === req.user.id){
-    return next(new ErrorResponse(`Product cannot be rated by user`, 401));
+  if (product.user.toString() === req.user.id) {
+    return next(new ErrorResponse('Product cannot be rated by user', 401));
   }
   // check if rating by user exist already
   let rating = await Rating.findOne({ product: product.id, user: req.user.id });
@@ -122,4 +123,24 @@ exports.rateProduct = asyncHandler(async (req, res, next) => {
   });
 
   return res.status(200).json({ success: true, data: rating });
+});
+
+exports.searchProduct = asyncHandler(async (req, res, next) => {
+  let products = await Product.find({}).populate('user').exec();
+  const qs = req.url.split('?')[1];
+  const searchParams = queryString.parse(qs);
+  for (const [key, value] of Object.entries(searchParams)) {
+    if(key === 'minamount'){
+      products = products.filter((product) => product.amount >= value)
+
+    }
+    else if (key === 'maxamount'){
+      products = products.filter((product) => product.amount <= value)
+    }
+    else{
+      products = products.filter((product) => product[key] == value)
+    }
+  }
+  
+  return res.status(200).json({ products });
 });

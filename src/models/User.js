@@ -43,10 +43,17 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: 1
   },
+  savedCards: {
+    type: Array
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   BvnToken: String,
   BvnTokenExpire: Date,
+  isverifed: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
