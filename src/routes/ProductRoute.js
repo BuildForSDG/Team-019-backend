@@ -9,7 +9,8 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
-  rateProduct
+  rateProduct,
+  searchProduct
 } = require('../controllers/productController');
 
 const { protect, authorize } = require('../middlewares/verifyAuth');
@@ -18,7 +19,8 @@ router
   .route('/')
   .get(getProducts)
   .post(protect, authorize('farmer', 'admin'), multerUploads, createProduct);
-
+  
+router.get('/search',protect, searchProduct )
 router
   .route('/:slug')
   .get(getProduct)
