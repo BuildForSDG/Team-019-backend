@@ -1,12 +1,12 @@
-const {SENDGRID_API} = require('../config/config')
+/* eslint-disable no-console */
+const sgMail = require('@sendgrid/mail');
+const { SENDGRID_API } = require('../config/config');
 
-const sgMail = require('@sendgrid/mail')
-const sendgridAPIKey = SENDGRID_API
+const sendgridAPIKey = SENDGRID_API;
 
-sgMail.setApiKey(sendgridAPIKey)
+sgMail.setApiKey(sendgridAPIKey);
 
 const sendEmail = async (options) => {
-
   const message = {
     from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
     to: options.email,

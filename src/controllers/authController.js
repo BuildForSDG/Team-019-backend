@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
 const crypto = require('crypto');
 const fetch = require('node-fetch');
@@ -38,7 +39,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 // @access    Public
 exports.register = asyncHandler(async (req, res, next) => {
   const {
-    firstName, lastName, email, password, role
+    firstName, lastName, email, password, role, phone
   } = req.body;
 
   // Create user
@@ -47,7 +48,8 @@ exports.register = asyncHandler(async (req, res, next) => {
     lastName,
     email,
     password,
-    role
+    role,
+    phone
   });
   generateCustomerId(user.email, user);
   sendTokenResponse(user, 200, res);
@@ -236,9 +238,14 @@ exports.sendBvnVerification = asyncHandler(async (req, res, next) => {
       user.BvnToken = 1234;
       user.BvnTokenExpire = Date.now() + 10 * 60 * 1000;
       user.save();
+      const data = {
+        firstName: response.data.first_name,
+        lastName: response.data.last_name,
+        mobile: response.data.mobile
+      };
       res.status(200).json({
         success: true,
-        data: response.data
+        data
       });
     });
   } catch (e) {
@@ -247,11 +254,11 @@ exports.sendBvnVerification = asyncHandler(async (req, res, next) => {
 });
 exports.verifyBvn = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
-  if(Date.now() > user.BvnTokenExpire){
+  if (Date.now() > user.BvnTokenExpire) {
     return res.status(400).json({
       status: 'failed',
       message: 'Bvn token expired'
-    })
+    });
   }
   if (req.body.bvnCode == user.BvnToken) {
     user.isverifed = true;
@@ -263,6 +270,6 @@ exports.verifyBvn = asyncHandler(async (req, res) => {
   }
   return res.status(401).json({
     status: 'failed',
-    message:'invalid Token'
+    message: 'invalid Token'
   });
 });

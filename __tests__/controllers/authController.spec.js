@@ -2,7 +2,6 @@ import {
   register, login, logout, getMe, updateDetails, UpdatePassword
 } from '@controllers/authController.js';
 import User from '@models/User';
-import asyncHandler from '@middlewares/async';
 import { connect, disconnect } from '../utils/mongoose';
 
 describe('The Auth controller', () => {

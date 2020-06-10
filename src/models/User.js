@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -36,6 +37,10 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
+  phone:{
+    type: String,
+    required: true
+  },
   rating: {
     type: Number,
     min: [1, 'Rating must be at least 1'],
@@ -43,8 +48,9 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: 1
   },
-  savedCards: {
-    type: Array
+  location:{
+    type: String,
+    Default: 'Edo'
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
