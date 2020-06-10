@@ -23,7 +23,9 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please add product cost']
   },
-
+  unit:{
+    type: String
+  },
   quantity: {
     type: Number,
     required: [true, 'Please add Product quantity']
@@ -36,6 +38,10 @@ const ProductSchema = new mongoose.Schema({
   photoUrl: {
     type: String,
     default: 'https://via.placeholder.com/150'
+  },
+  location:{
+    type:String,
+    default:'Edo'
   },
   createdAt: {
     type: Date,

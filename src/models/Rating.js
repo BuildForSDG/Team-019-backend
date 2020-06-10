@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const User = require('./User');
 const Product = require('./Product');
@@ -56,6 +57,7 @@ RatingSchema.statics.getAverageRating = async function (productId) {
 };
 
 // Static method to get avg rating for user
+// eslint-disable-next-line func-names
 RatingSchema.statics.getAverageUserRating = async function (productId) {
   try {
     const product = await Product.findById(productId);

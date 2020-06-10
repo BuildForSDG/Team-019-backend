@@ -2,7 +2,7 @@ node_modules
 build
 docs
 docker
-test
+__test__
 .vscode
 koa/views
 src/generated

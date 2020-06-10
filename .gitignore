@@ -105,4 +105,7 @@ dist
 
 .vscode
 
-playground.js
+play.js
+
+src/helpers/generateCustomer.js
+src/helpers/payment.js

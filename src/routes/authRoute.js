@@ -24,7 +24,7 @@ router.put('/updatedetails', protect, updateDetails);
 router.put('/updatepassword', protect, updatePassword);
 router.post('/forgotpassword', forgotPassword);
 router.put('/resetpassword/:resettoken', resetPassword);
-router.post('/bvn',protect, authorize('farmer'), sendBvnVerification)
-router.post('/verify',protect, authorize('farmer'), verifyBvn)
+router.post('/bvn', protect, authorize('farmer'), sendBvnVerification);
+router.post('/verify', protect, authorize('farmer'), verifyBvn);
 
 module.exports = router;

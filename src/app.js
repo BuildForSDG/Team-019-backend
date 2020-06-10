@@ -10,8 +10,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 const { resolve } = require('path');
-const { multerUploads, dataUri } = require('./middlewares/multer');
-const { cloudinaryConfig, uploader } = require('./config/cloudinaryConfig');
+const { cloudinaryConfig } = require('./config/cloudinaryConfig');
 const errorHandler = require('./middlewares/error');
 const connectDB = require('./config/db');
 
