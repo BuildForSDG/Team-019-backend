@@ -50,7 +50,6 @@ const UserSchema = new mongoose.Schema({
   },
   location:{
     type: String,
-    Default: 'Edo'
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
