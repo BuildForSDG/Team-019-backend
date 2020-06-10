@@ -1,6 +1,5 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
-const User = require('./User');
 const Product = require('./Product');
 
 const RatingSchema = new mongoose.Schema({

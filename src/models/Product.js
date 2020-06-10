@@ -41,7 +41,6 @@ const ProductSchema = new mongoose.Schema({
   },
   location:{
     type:String,
-    default:'Edo'
   },
   createdAt: {
     type: Date,
