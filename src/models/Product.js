@@ -23,7 +23,7 @@ const ProductSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please add product cost']
   },
-  unit:{
+  unit: {
     type: String
   },
   quantity: {
@@ -39,8 +39,8 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     default: 'https://via.placeholder.com/150'
   },
-  location:{
-    type:String,
+  location: {
+    type: String
   },
   createdAt: {
     type: Date,
